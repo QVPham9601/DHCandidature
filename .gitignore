@@ -1,11 +1,12 @@
 .idea/*
 *.pdf
 *.zip
-Docs/*
-Docsreduce/*
-Resources/.DS_Store
-.DS_Store
 *.csv
 *.xlsx
 *.log
-Scripts/*.pyc
+*.DS_Store
+*.pyc
+HOSO/*
+scripts/data
+logs
+Docsreduce/*
