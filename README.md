@@ -38,7 +38,9 @@ python scripts/get_submissions.py -f fr -s 39
 ```
 python scripts/get_submissions.py -f sg -s 39
 ```
-Documents are saved in `HOSO`. Interview forms are saved in `HOSO/fr/INTERVIEW` and `HOSO/sg/INTERVIEW`
+Documents are saved in `HOSO`. Interview forms are saved in `HOSO/fr/INTERVIEW` and `HOSO/sg/INTERVIEW`.
+
+Note: candidates not having a motivation letter are put in the disqualified directory in each school.
 
 ### Merge documents by hand
 Sometimes the program fails to merge the pdfs because the candidate has sent files in invalid format. All the failed files can be found in the `tmp` folder (e.g. `HOSO/fr/tmp/`)
@@ -48,4 +50,11 @@ If successful, we can convert these files to pdf and merge them to the rest of t
 In case we can't recover the corrupted file, we can contact the student to resend them by mail.
 
 ## Simplify candidate data
-TODO
+1. Download csv files from 123formbuilder for each form e.g `Dulieu39_FR.csv` and `Dulieu39_SG.csv` and put in the project directory of this repo.
+2 Run the following command to simplify the data in the csv where `39` is the semester number:
+```
+python scripts/simplify_candidate_data.py Dulieu39_FR.csv 39
+python scripts/simplify_candidate_data.py Dulieu39_SG.csv 39
+```
+The output files have `_Simplified` suffix in the same directory as the input files.
+These files can be shared with universities in Vietnam and they will be used as input source for Dong Hanh webapp (for evaluation)
