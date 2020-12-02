@@ -12,7 +12,7 @@ import simplejson as json
 
 import make_pdf
 from constants import *
-from utils.common import mkdir_p
+from utils.common import mkdir_p, remove_if_exist
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -102,6 +102,7 @@ def create_output_folders(region):
     mkdir_p(os.path.join(OUTPUT_FOLDER, region))
 
     os.chdir(os.path.join(OUTPUT_FOLDER, region))
+    remove_if_exist("tmp")
     mkdir_p("tmp")
 
     for code in SCHOOL_CODE[region].values():
@@ -121,7 +122,7 @@ def get_fields(form_id):
     fields_response = json.loads(response.content.encode('utf-8'))
     for field in fields_response['fields']:
         fields += [field['fieldTitle']]
-    with open("fields.json", "w") as fo:
+    with open("fields.json", "w", encoding='utf-8') as fo:
         json.dump(fields, fo)
     return fields
 
@@ -150,7 +151,7 @@ if __name__ == '__main__':
         else:
             logger.info(f"Downloading the list of candidates...")
             candidates = get_submissions_from_api(form_id)
-            with open(f"{args.form}.json", "a") as output:
+            with open(f"{args.form}.json", "a", encoding='utf-8') as output:
                 json.dump(candidates, output)
                 logger.info(f"Saving remote data to {args.form}.json")
         run_parallel(candidates, os.path.join(OUTPUT_FOLDER, args.form), args.semester)

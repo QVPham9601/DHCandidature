@@ -1,4 +1,5 @@
 import os
+import shutil
 
 import requests
 
@@ -15,8 +16,15 @@ def mkdir_p(path):
 
 def remove_if_exist(path):
     if os.path.exists(path):
-        logger.debug('Deleting %s' % path)
-        os.remove(path)
+        if os.path.isfile(path):
+            logger.debug('Deleting %s' % path)
+            os.remove(path)
+        elif os.path.isdir(path):
+            try:
+                shutil.rmtree(path)
+                logger.debug('Deleting %s' % path)
+            except OSError as e:
+                logger.error("Error: %s - %s." % (e.filename, e.strerror))
 
 
 def download_file(url, filename):
