@@ -51,6 +51,7 @@ In case we can't recover the corrupted file, we can contact the student to resen
 
 ## Simplify candidate data
 1. Download csv files from 123formbuilder for each form e.g `Dulieu39_FR.csv` and `Dulieu39_SG.csv` and put in the project directory of this repo.
+
 2 Run the following command to simplify the data in the csv where `39` is the semester number:
 ```
 python scripts/simplify_candidate_data.py Dulieu39_FR.csv 39

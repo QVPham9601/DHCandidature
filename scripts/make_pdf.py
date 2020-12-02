@@ -143,13 +143,14 @@ def create_logo(school):
 def get_attach_file(merger, filename, doc_index, candidate_idx, tmp_path):
     success = True
     try:
-        file_in = PdfFileReader(open(os.path.join(tmp_path, "{}_{}.pdf".format(filename, doc_index)), 'rb'))
-        if not file_in.isEncrypted:
-            merger.append(file_in)
-        else:
-            logger.error(
-                "Không thể nối thư xin học bổng ở hồ sơ thứ " + str(candidate_idx) + ". Yêu cầu thực hiện thủ công.")
-            success = False
+        with open(os.path.join(tmp_path, "{}_{}.pdf".format(filename, doc_index)), 'rb') as fi:
+            pdf = PdfFileReader(fi)
+            if not pdf.isEncrypted:
+                merger.append(pdf)
+            else:
+                logger.error(
+                    "Không thể nối thư xin học bổng ở hồ sơ thứ " + str(candidate_idx) + ". Yêu cầu thực hiện thủ công.")
+                success = False
     except PdfReadError as e:
         success = False
         formatted_lines = traceback.format_exc().splitlines()
@@ -236,9 +237,10 @@ def buildPdf(target, candidate_idx, candidate, heading_csv, semester):
 def merge_pdf(tmp_path, basename, has_attachment, candidate_idx, final_path):
     # Create a merger (an object to merge documents) then join created documents into the merger.
     merger = PdfFileMerger(strict=False)
-    main_doc = PdfFileReader(open(os.path.join(tmp_path, basename + '_1.pdf'), 'rb'))
-    merger.append(main_doc)
-    success = True
+    with open(os.path.join(tmp_path, basename + '_1.pdf'), 'rb') as fi:
+        main_doc = PdfFileReader(fi)
+        merger.append(main_doc)
+        success = True
 
     # Check if need to merge pdf with attachments
     # Some pdf may be encrypted, in this case automatic merge cannot be performed.
@@ -258,8 +260,9 @@ def merge_pdf(tmp_path, basename, has_attachment, candidate_idx, final_path):
     if has_attachment['GiayToKhacScan'] == 1:
         success = get_attach_file(merger, basename, 5, candidate_idx, tmp_path)
 
-    interview_doc = PdfFileReader(open(os.path.join(tmp_path, basename + '_6.pdf'), 'rb'))
-    merger.append(interview_doc)
+    with open(os.path.join(tmp_path, basename + '_6.pdf'), 'rb') as fi:
+        interview_doc = PdfFileReader(fi)
+        merger.append(interview_doc)
 
     # final location to write pdf
     try:
