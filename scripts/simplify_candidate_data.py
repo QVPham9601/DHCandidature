@@ -1,4 +1,4 @@
-# !/user/local/bin/python2.7
+# !/user/local/bin/python3
 # -*- coding: utf-8 -*-
 
 import csv
@@ -25,7 +25,7 @@ def city(string1, string2):
 
 
 def transform_csv_to_list(filename):
-    with open(os.path.abspath(filename), 'rU', encoding='utf-8') as f:
+    with open(os.path.abspath(filename), 'r', encoding='utf-8') as f:
         data = list(list(rec) for rec in csv.reader(f, delimiter=','))
         f.close()
     return data
@@ -62,12 +62,11 @@ if __name__ == '__main__':
         res = simplify(data[i], semester)
         newdata.append(res)
     newdata = sorted(newdata, key=get_key_to_compare)
-    myfile = open(sys.argv[1][:-4] + '_Simplified.csv', 'w')
-    for i in range(len(newdata)):
-        myfile.write(newdata[i][0])
-        for j in range(1, len(newdata[0])):
-            myfile.write(',')
-            myfile.write(str(newdata[i][j]))
-        myfile.write('\n')
-    myfile.close()
+    with open(sys.argv[1][:-4] + '_Simplified.csv', 'w', encoding='utf-8') as fo:
+        for i in range(len(newdata)):
+            fo.write(newdata[i][0])
+            for j in range(1, len(newdata[0])):
+                fo.write(',')
+                fo.write(str(newdata[i][j]))
+            fo.write('\n')
     print("Successfully finished.")
