@@ -103,6 +103,7 @@ SCHOOL_NB = {
     'Trường Đại học Sư phạm Kỹ thuật TP Hồ Chí Minh': '18',
     'Trường Đại Học Ngoại Ngữ, ĐHQG Hà Nội': '19',
     'Trường khác (ghi rõ trong thư xin học bổng)': '21',
+    'Unknown': '21'
 }
 
 ############### ----------BUILD PDF PARAMETERS---------- ###############

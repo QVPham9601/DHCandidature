@@ -42,7 +42,7 @@ def simplify(record, semester):
     new_record[4] = record[4]
     new_record[5] = SCHOOL_YEAR[record[6]] if record[6] in SCHOOL_YEAR else ""
     new_record[6] = record[8].replace(',', ';')
-    new_record[7] = SCHOOL_CODE_ALL.get(record[9], 'KHAC')
+    new_record[7] = SCHOOL_CODE_ALL.get(record[9], 'UNK')
     new_record[8] = city(record[11], record[12])
     new_record[9] = record[16]
     new_record[10] = record[17]
