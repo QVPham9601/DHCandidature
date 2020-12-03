@@ -59,8 +59,10 @@ if __name__ == '__main__':
     semester = sys.argv[2]
     newdata = []
     for i in range(1, len(data)):
-        res = simplify(data[i], semester)
-        newdata.append(res)
+        # do not add if there is no motivation letter
+        if not (data[i][87].strip() == "" and data[i][88].strip() == ""):
+            res = simplify(data[i], semester)
+            newdata.append(res)
     newdata = sorted(newdata, key=get_key_to_compare)
     with open(sys.argv[1][:-4] + '_Simplified.csv', 'w', encoding='utf-8') as fo:
         for i in range(len(newdata)):
