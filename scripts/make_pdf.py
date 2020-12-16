@@ -215,6 +215,7 @@ def buildPdf(target, candidate_idx, candidate, heading_csv, semester):
     interview_story = []
     interview_story = step5_inteview_form(interview_story, candidate, heading_csv)
     main_document.build(interview_story)
+    interview_story = step5_inteview_form(interview_story, candidate, heading_csv)
     interview_document.build(interview_story)
 
     # Get pdf merger containing the documents created above
