@@ -210,8 +210,12 @@ def buildPdf(target, candidate_idx, candidate, heading_csv, semester):
 
     # Ý kiến đánh giá
     main_document = get_doc_template(os.path.join(tmp_path, basename + '_6.pdf'), basename)
-    interview_document = get_doc_template(
-        os.path.join(interview_dir_path, SCHOOL_CODE_ALL[school], basename + '_6.pdf'), basename)
+    if get_field(candidate, 'KhungVietThu') == "" and has_attachment['ThuXinHocBongScan'] == 0:
+        interview_document = get_doc_template(
+            os.path.join(interview_dir_path, SCHOOL_CODE_ALL[school], 'DISQUALIFIED', basename + '_6.pdf'), basename)
+    else:
+        interview_document = get_doc_template(
+            os.path.join(interview_dir_path, SCHOOL_CODE_ALL[school], basename + '_6.pdf'), basename)
     interview_story = []
     interview_story = step5_inteview_form(interview_story, candidate, heading_csv)
     main_document.build(interview_story)

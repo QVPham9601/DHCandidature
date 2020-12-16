@@ -110,6 +110,7 @@ def create_output_folders(region):
         mkdir_p(code + "/DISQUALIFIED")
         mkdir_p("INTERVIEW")
         mkdir_p("INTERVIEW/" + code)
+        mkdir_p("INTERVIEW/" + code + "/DISQUALIFIED")
 
 
 def get_fields(form_id):
