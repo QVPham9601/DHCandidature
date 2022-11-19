@@ -28,13 +28,14 @@ SCHOOL_CODE_LIST = [
     'BKHN', 'TNHN', 'XD', 'GTVT1', 'CNHN',
     'VINH', 'BKDN', 'KTDN', 'SPDN',
     'NNDN', 'BKHCM', 'TNHCM', 'KTLHCM',
-    'GTVT2', 'DALAT', 'CTHO', 'NNHN', 'SPKTHCM', 'KHAC', 'UNK'
+    'GTVT2', 'DALAT', 'CTHO', 'NNHN', 'SPKTHCM', 'KHAC', 'UNK', 'YHN', 'THPT_VINH'
 ]
 
 SCHOOL_CODE_ALL = {
     'Trường Đại học Bách khoa Hà Nội': 'BKHN',
     'Trường Đại học Khoa học tự nhiên, ĐHQG Hà Nội': 'TNHN',
     'Trường Đại học Xây dựng': 'XD',
+    'Trường Đại học Y Hà Nội': 'YHN',
     'Trường Đại học Giao thông vận tải cơ sở I (tại Hà Nội)': 'GTVT1',
     'Trường Đại học Công nghệ, ĐHQG Hà Nội': 'CNHN',
     'Trường Đại học Vinh': 'VINH',
@@ -50,8 +51,9 @@ SCHOOL_CODE_ALL = {
     'Trường Đại học Cần Thơ': 'CTHO',
     'Trường Đại Học Ngoại Ngữ, ĐHQG Hà Nội': 'NNHN',
     'Trường Đại học Sư phạm Kỹ thuật TP Hồ Chí Minh': 'SPKTHCM',
-    'Trường khác (ghi rõ trong thư xin học bổng)': 'KHAC',
+    'Trường khác (ghi rõ dưới đây)': 'KHAC',
     'Unknown': 'UNK',
+	'Trường THPT Chuyên - Đại học Vinh' : 'THPT_VINH',
 }
 
 SCHOOL_CODE = {
@@ -59,12 +61,15 @@ SCHOOL_CODE = {
         'Trường Đại Học Ngoại Ngữ, ĐHQG Hà Nội': 'NNHN',
         'Trường Đại học Kinh tế Luật, ĐHQG TP Hồ Chí Minh': 'KTLHCM',
         'Trường Đại học Công nghệ, ĐHQG Hà Nội': 'CNHN',
-        'Trường khác (ghi rõ trong thư xin học bổng)': 'KHAC',
+        'Trường khác (ghi rõ dưới đây)': 'KHAC',
         'Unknown': 'UNK'
     },
     'fr': {
+		'Trường Đại Học Ngoại Ngữ, ĐHQG Hà Nội': 'NNHN',
+		'Trường Đại học Công nghệ, ĐHQG Hà Nội': 'CNHN',
         'Trường Đại học Bách khoa Hà Nội': 'BKHN',
         'Trường Đại học Khoa học tự nhiên, ĐHQG Hà Nội': 'TNHN',
+        'Trường Đại học Y Hà Nội': 'YHN',
         'Trường Đại học Xây dựng': 'XD',
         'Trường Đại học Giao thông vận tải cơ sở I (tại Hà Nội)': 'GTVT1',
         'Trường Đại học Vinh': 'VINH',
@@ -74,12 +79,14 @@ SCHOOL_CODE = {
         'Trường Đại học Ngoại ngữ, ĐH Đà Nẵng': 'NNDN',
         'Trường Đại học Bách khoa, ĐHQG TP Hồ Chí Minh': 'BKHCM',
         'Trường Đại học Khoa học tự nhiên, ĐHQG TP Hồ Chí Minh': 'TNHCM',
+        'Trường Đại học Kinh tế Luật, ĐHQG TP Hồ Chí Minh': 'KTLHCM',
         'Trường Đại học Giao thông vận tải cơ sở II (tại TP Hồ Chí Minh)': 'GTVT2',
         'Trường Đại học Đà Lạt': 'DALAT',
         'Trường Đại học Sư phạm Kỹ thuật TP Hồ Chí Minh': 'SPKTHCM',
         'Trường Đại học Cần Thơ': 'CTHO',
-        'Trường khác (ghi rõ trong thư xin học bổng)': 'KHAC',
-        'Unknown': 'UNK'
+        'Trường khác (ghi rõ dưới đây)': 'KHAC',
+        'Unknown': 'UNK',
+		'Trường THPT Chuyên - Đại học Vinh' : 'THPT_VINH',
     }
 }
 
@@ -102,8 +109,10 @@ SCHOOL_NB = {
     'Trường Đại học Cần Thơ': '17',
     'Trường Đại học Sư phạm Kỹ thuật TP Hồ Chí Minh': '18',
     'Trường Đại Học Ngoại Ngữ, ĐHQG Hà Nội': '19',
-    'Trường khác (ghi rõ trong thư xin học bổng)': '21',
-    'Unknown': '21'
+    'Trường khác (ghi rõ dưới đây)': '20',
+    'Trường Đại học Y Hà Nội': '21',
+    'Unknown': '22',
+	'Trường THPT Chuyên - Đại học Vinh' : '13',
 }
 
 ############### ----------BUILD PDF PARAMETERS---------- ###############
@@ -125,31 +134,30 @@ YES_NO_ICON = {'yes': u"\u2327", 'Yes': u"\u2327", 'No': u"\u29e0", 'no': u"\u29
                'Chưa từng': u"\u29e0", u'Chưa từng': u"\u29e0", '': u"\u29e0"}
 
 # Keys for all fields of the input csv
-# The order of these fields must match exactly those in the input csb
+# The order of these fields must match exactly those in the input csv
 # NB: For any insertion/deletion/change of positions of columns, please update this param
 FIELD_NAMES = ['HoVaTen', 'GioiTinh', 'NgaySinh', 'MaSoSV', 'NamThu', 'KhoaNganh',
-               'Lop', 'Truong', 'SoNhaDuongSinh', 'QuanHuyenSinh', 'TinhThanhSinh', 'SoNhaDuongTru',
+               'Lop', 'Truong', 'TenTruongNeuKhac', 'SoNhaDuongSinh', 'QuanHuyenSinh', 'TinhThanhSinh', 'SoNhaDuongTru',
                'QuanHuyenTru', 'TinhThanhTru', 'DienThoai', 'Email', 'HoTenCha', 'TuoiCha',
-               'NgheNghiepCha', 'HoTenMe', 'TuoiMe', 'NgheNghiepMe', 'NguoiThan1', 'NguoiThan2',
+               'NgheNghiepCha', 'HoTenMe', 'TuoiMe', 'NgheNghiepMe', 'NguoiThan1', 'NguoiThan2',                          #25 fields
                'NguoiThan3', 'NguoiThan4', 'NguoiThan5', 'NguoiThan6', 'NguoiThan7', 'NguoiThan8',
-               'NguoiThan9', 'DiemDaiHoc', 'DiemKi1', 'DiemKi2', 'DiemKi3', 'DiemTotNghiep',
-               'ThanhTichKhac1', 'ThanhTichKhac2', 'ThanhTichKhac3', 'ThanhTichKhac4', 'ThanhTichKhac5', 'THPT',
+               'NguoiThan9', 'DiemTotNghiep_DaiHoc', 'DiemKi1_Nam1', 'DiemKi2_Nam1', 'DiemKi1_Nam2', 'DiemKi2_Nam2', 
+               'DiemKi1_Nam3', 'DiemKi2_Nam3', 'DiemKi1_Nam4','DiemKi2_Nam4',
+               'ThanhTichKhac1', 'ThanhTichKhac2', 'ThanhTichKhac3', 'ThanhTichKhac4', 'ThanhTichKhac5', 'THPT',          #47 fields
                'NhanHBDHChua', 'KiN-5', 'KiN-4', 'KiN-3', 'KiN-2', 'KiN-1',
-               'CoHoTroKhac', 'HoTro1', 'HoTro2', 'HoTro3', 'HoTro4', 'HoTro5',
-               'LamThem', 'HoatDongKhac', 'NhaO', 'DiLai', 'TienAn', 'TienHoc',
-               'TienHocThem', 'VuiChoi', 'CacKhoanKhac', 'ThuNhapBinhQuan', 'ThuNhapGiaDinh', 'ThuNhapHocBong',
+               'CoHoTroKhac', 'HoTro1', 'HoTro2', 'HoTro3', 'HoTro4', 'HoTro5', 'TienHocBongDaNhan',
+               'LamThem', 'HoatDongKhac', 'NhaO', 'DiLai', 'TienAn','VuiChoi',                                            #66 fields
+               'TienHoc', 'TienHocThem',  'HocThemGi', 'TienHocTuDau', 'ThuNhapBinhQuan', 'ThuNhapGiaDinh', 'ThuNhapHocBong',
                'ThuNhapTienVay', 'ThuNhapLamThem', 'ThuNhapKhac', 'KhoKhanCuocSong', 'DongTienHocKhong',
                'DongTienHocBaoNhieu',
-               'DongTienNhaKhong', 'DongTienNhaBaoNhieu', 'HocThemKhong', 'HocThemBaoNhieu', 'DongTienKhac',
-               'MongMuonNhanGiTuDH',
-               'KhoKhanLamHoSo', 'LienLacCachNao1', 'LienLacCachNao2', 'LienLacCachNao3', 'LienLacCachNao4',
-               'DeDatNhanNhu',
+               'DongTienNhaKhong', 'DongTienNhaBaoNhieu', 'HocThemKhong', 'HocThemBaoNhieu', 'DongTienKhac',              #84 fields
+               'MongMuonNhanGiTuDH', 'KhoKhanLamHoSo', 'DeDatNhanNhu',
                'HinhThucThu', 'KhungVietThu', 'KhungScanThu', 'BangDiemScan', 'ChungNhanKhoKhanScan', 'GiayToKhacScan',
-               'GiayToKhacList', 'AnhCaNhan']
+               'GiayToKhacList', 'AnhCaNhan']                                                                             #95 fields
 
 FIELD_NAMES_FULL = {'HoVaTen': 'Họ và tên', 'GioiTinh': 'Giới tính', 'NgaySinh': 'Ngày sinh',
                     'MaSoSV': 'Mã số sinh viên', 'NamThu': 'Sinh viên năm thứ', 'KhoaNganh': 'Khoa/Ngành',
-                    'Lop': 'Lớp', 'Truong': 'Trường', 'DiaChiSinh': 'Địa chỉ hiện tại',
+                    'Lop': 'Lớp', 'Truong': 'Trường', 'TenTruongNeuKhac': 'Trường (nếu khác)', 'DiaChiSinh': 'Địa chỉ hiện tại',
                     'DiaChiTru': 'Địa chỉ thường trú', 'DienThoai': 'Điện thoại', 'Email': 'Email',
                     'NhaO': 'Nhà ở', 'DiLai': 'Đi lại', 'TienAn': 'Tiền ăn', 'TienHoc': 'Tiền học chính khoá',
                     'TienHocThem': 'Tiền học thêm', 'VuiChoi': 'Vui chơi, giải trí', 'CacKhoanKhac': 'Các khoản khác',

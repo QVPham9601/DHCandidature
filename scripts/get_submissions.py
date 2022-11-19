@@ -73,7 +73,7 @@ def get_submissions_from_api(form_id):
     data = {
         'apiKey': API_KEY,
         'pageSize': PAGE_SIZE,
-        'sort': "ASC"  # sort oldest to newest
+        'sort': "DSC"  # sort oldest to newest
     }
     num_page = int(count / PAGE_SIZE + 1)
     for i in range(num_page):
@@ -108,9 +108,12 @@ def create_output_folders(region):
     for code in SCHOOL_CODE[region].values():
         mkdir_p(code)
         mkdir_p(code + "/DISQUALIFIED")
+        mkdir_p(code + "/INTERVIEW")
+        """
         mkdir_p("INTERVIEW")
         mkdir_p("INTERVIEW/" + code)
         mkdir_p("INTERVIEW/" + code + "/DISQUALIFIED")
+        """
 
 
 def get_fields(form_id):

@@ -87,7 +87,8 @@ def create_logo(school):
         This function creates logo and logo text for some pdf pages.
     '''
     # For DH Singapore
-    if SCHOOL_CODE_ALL[school] in ['CNHN', 'KTLHCM']:
+    # Names changed as this year CNHN and KTLHCM are also for DH France
+    if SCHOOL_CODE_ALL[school] in ['CNHN_1', 'KTLHCM_1']:
         # read image and put to flowable object
         logo_img = PIL_Image.open(os.path.join(LOGO_DIR, 'logo_dong_hanh_sing.png'))
         imsize = logo_img.size
@@ -180,11 +181,12 @@ def buildPdf(target, candidate_idx, candidate, heading_csv, semester):
     '''
     # set path for temporary files
     tmp_path = os.path.join(target, 'tmp')
-    interview_dir_path = os.path.join(target, 'INTERVIEW')
+    #interview_dir_path = os.path.join(target, 'INTERVIEW')
     school = get_field(candidate, 'Truong')
     if school == '-':
         candidate[INDEX_OF_KEY['Truong']] = "Unknown"
         school = "Unknown"
+    interview_dir_path = os.path.join(target,SCHOOL_CODE_ALL[school], 'INTERVIEW')
     basename = get_pdf_basename(candidate, candidate_idx)
     filename2 = get_pdf_basename(candidate, 0)
 
@@ -210,18 +212,23 @@ def buildPdf(target, candidate_idx, candidate, heading_csv, semester):
 
     # Ý kiến đánh giá
     main_document = get_doc_template(os.path.join(tmp_path, basename + '_6.pdf'), basename)
+    """
     if get_field(candidate, 'KhungVietThu') == "" and has_attachment['ThuXinHocBongScan'] == 0:
         interview_document = get_doc_template(
             os.path.join(interview_dir_path, SCHOOL_CODE_ALL[school], 'DISQUALIFIED', basename + '_6.pdf'), basename)
     else:
         interview_document = get_doc_template(
             os.path.join(interview_dir_path, SCHOOL_CODE_ALL[school], basename + '_6.pdf'), basename)
+    """
+    
     interview_story = []
     interview_story = step5_inteview_form(interview_story, candidate, heading_csv)
     main_document.build(interview_story)
     interview_story = step5_inteview_form(interview_story, candidate, heading_csv)
-    interview_document.build(interview_story)
-
+    if not(get_field(candidate, 'KhungVietThu') == "" and has_attachment['ThuXinHocBongScan'] == 0):
+        interview_document = get_doc_template(
+            os.path.join(interview_dir_path, basename + '_6.pdf'), basename)
+        interview_document.build(interview_story)
     # Get pdf merger containing the documents created above
     if get_field(candidate, 'KhungVietThu') == "" and has_attachment['ThuXinHocBongScan'] == 0:
         final_path = os.path.join(target, SCHOOL_CODE_ALL[school], 'DISQUALIFIED', basename + '.pdf')
@@ -264,10 +271,12 @@ def merge_pdf(tmp_path, basename, has_attachment, candidate_idx, final_path):
     # Giấy tờ khác
     if has_attachment['GiayToKhacScan'] == 1:
         success = get_attach_file(merger, basename, 5, candidate_idx, tmp_path)
-
-    with open(os.path.join(tmp_path, basename + '_6.pdf'), 'rb') as fi:
-        interview_doc = PdfFileReader(fi)
-        merger.append(interview_doc)
+	
+	#The next 3 lines are to merge "interview doc" with the whole file
+	
+    #with open(os.path.join(tmp_path, basename + '_6.pdf'), 'rb') as fi:
+    #    interview_doc = PdfFileReader(fi)
+    #    merger.append(interview_doc)
 
     # final location to write pdf
     try:
@@ -296,21 +305,24 @@ def step1_basic_info(story, candidate, semester, heading_csv, TMP_PATH):
 
     # add AnhCaNhan
     candidate_photo = ""
-    # if get(candidate, 'AnhCaNhan') != "yes" and get(candidate, 'AnhCaNhan') != "no" and get(candidate, 'AnhCaNhan') != "":
+    # if get_field(candidate, 'AnhCaNhan') != "yes" and get_field(candidate, 'AnhCaNhan') != "no" and get_field(candidate, 'AnhCaNhan') != "":
     #     try:
-    #         # print(get(candidate, 'AnhCaNhan'))
-    #         download(get(candidate, 'AnhCaNhan'), os.path.join(TMP_PATH, filename + '_photo'))
-    #         im = Image.open(os.path.join(TMP_PATH, filename + '_photo'))
+    #         # print(get_field(candidate, 'AnhCaNhan'))
+    #         # download_file(get_field(candidate, 'ChungNhanKhoKhanScan'), filename + '_4.pdf')
+    #         download_file(get_field(candidate, 'AnhCaNhan'), os.path.join(TMP_PATH, filename + '_photo.jpg'))
+    #         # im = Flowable_Image.open(os.path.join(TMP_PATH, filename + '_photo'))
     #         imw = 75
     #         imh = 100
-    #         candidate_photo = Flowable_Image(os.path.join(TMP_PATH, filename + '_photo'), imw, imh)
+    #         candidate_photo = Flowable_Image(os.path.join(TMP_PATH, filename + '_photo.jpg'), imw, imh)
     #         candidate_photo.hAlign = 'CENTER'
     #     except IOError as e:
     #         logger.error(e)
     #         logger.error("Invalid image. Discard candidate photo {}".format(filename))
-    #         pass
+    #         candidate_photo = ""
 
-    # c.drawImage(filename, inch, height - 2 * inch)
+            
+
+    # story.drawImage(filename, inch, height - 2 * inch)
 
     # Title
     story.append(Paragraph(u'SƠ YẾU LÍ LỊCH', DOC_STYLES['Title Style']))
@@ -327,7 +339,7 @@ def step1_basic_info(story, candidate, semester, heading_csv, TMP_PATH):
     table.setStyle(table_style)
     story.append(table)
 
-    local_needed_fields = ['Lop', 'Truong', 'DiaChiSinh', 'DiaChiTru', 'DienThoai', 'Email']
+    local_needed_fields = ['Lop', 'Truong', 'TenTruongNeuKhac', 'DiaChiSinh', 'DiaChiTru', 'DienThoai', 'Email']
     table_data = [[(FIELD_NAMES_FULL[key] + ':'),
                    Paragraph(get_field(candidate, key), DOC_STYLES['Italic Body Style'])] for key in
                   local_needed_fields]
@@ -347,9 +359,9 @@ def step1_basic_info(story, candidate, semester, heading_csv, TMP_PATH):
     table.setStyle(table_style)
     story.append(table)
 
-    story.append(Spacer(width=0, height=2 * LINE_SPACING))
+    story.append(Spacer(width=0, height=1.5 * LINE_SPACING))
     story.append(Paragraph(u'Các thành viên khác trong gia đình:', DOC_STYLES['Body Style']))
-    story.append(Spacer(width=0, height=2 * LINE_SPACING))
+    story.append(Spacer(width=0, height=1.5 * LINE_SPACING))
 
     # Family member table
     table_data = [[u'Họ và tên', u'Quan hệ', u'Tuổi', u'Nghề nghiệp']]
@@ -367,22 +379,36 @@ def step1_basic_info(story, candidate, semester, heading_csv, TMP_PATH):
     story.append(Paragraph(u'III. Kết quả học tập', DOC_STYLES['Heading I Style']))
     story.append(Paragraph(u'Điểm trung bình các học kì đại học:', DOC_STYLES['Body Style']))
     story.append(Spacer(width=0, height=2 * LINE_SPACING))
-    table_data = [[u'Học kì I năm I', u'Học kì II năm I', u'Học kì I năm II'], \
-                  [get_field(candidate, key) for key in ['DiemKi1', 'DiemKi2', 'DiemKi3']]]
-    table = Table(table_data, colWidths=[160, 160, 160])
+    table_data = [[u'Học kì I năm 1', u'Học kì II năm 1', u'Học kì I năm 2', u'Học kì II năm 2'], \
+                  [get_field(candidate, key) for key in ['DiemKi1_Nam1', 'DiemKi2_Nam1', 'DiemKi1_Nam2', 'DiemKi2_Nam2']]]
+    table = Table(table_data, colWidths=[120, 120, 120, 120])
     table_style = HORIZONTAL_NUMERIC_TABLE
     table.setStyle(table_style)
     story.append(table)
-    table_data = [[u'Điểm thi tốt nghiệp:', [Paragraph(element, DOC_STYLES['Table Cell Style']) for element in
+    
+    story.append(Spacer(width=0, height=2 * LINE_SPACING))
+    table_data = [[u'Học kì I năm 3', u'Học kì II năm 3', u'Học kì I năm 4', u'Học kì II năm 4'], \
+                  [get_field(candidate, key) for key in ['DiemKi1_Nam3', 'DiemKi2_Nam3', 'DiemKi1_Nam4','DiemKi2_Nam4']]]
+    table = Table(table_data, colWidths=[120, 120, 120, 120])
+    table_style = HORIZONTAL_NUMERIC_TABLE
+    table.setStyle(table_style)
+    story.append(table)
+    
+    '''table_data = [[u'Điểm thi tốt nghiệp:', [Paragraph(element, DOC_STYLES['Table Cell Style']) for element in
                                              get_field(candidate, 'DiemTotNghiep').split("\n")]],
                   [u'Điểm thi đại học:', [Paragraph(element, DOC_STYLES['Table Cell Style']) for element in
-                                          get_field(candidate, 'DiemDaiHoc').split("\n")]]]
+                                          get_field(candidate, 'DiemTotNghiep_DaiHoc').split("\n")]]]
+    '''
+    
+    story.append(Spacer(width=0, height= LINE_SPACING))
+    table_data = [[u'Điểm thi đại học:', [Paragraph(element, DOC_STYLES['Table Cell Style']) for element in
+                                          get_field(candidate, 'DiemTotNghiep_DaiHoc').split("\n")]]]
     table = Table(table_data, colWidths=[150, 330])
     table_style = TRANSPARENT_TABLE
     table.setStyle(table_style)
     story.append(table)
 
-    story.append(Spacer(width=0, height=2 * LINE_SPACING))
+    story.append(Spacer(width=0, height=1.5 * LINE_SPACING))
 
     # Other achievements
     story.append(Paragraph(u'Các thành tích khác:', DOC_STYLES['Body Style']))
@@ -395,8 +421,8 @@ def step1_basic_info(story, candidate, semester, heading_csv, TMP_PATH):
     table_style = STANDARD_TABLE
     table.setStyle(table_style)
     story.append(table)
-    story.append(Spacer(width=0, height=2 * LINE_SPACING))
-
+    story.append(Spacer(width=0, height=1.5 * LINE_SPACING))
+    
     # Other infos
     story.append(Paragraph(u'IV. Các thông tin khác', DOC_STYLES['Heading I Style']))
     story.append(Paragraph(('Nơi học THPT: <i>%s%s</i>' % (make_tabs(16), get_field(candidate, 'THPT'))),
@@ -420,30 +446,40 @@ def step1_basic_info(story, candidate, semester, heading_csv, TMP_PATH):
     story.append(Paragraph(u'Bạn từng được nhận hỗ trợ tài chính khác trong thời gian học đại học chưa?',
                            DOC_STYLES['Heading I Style']))
     story.append(Paragraph(u'Nếu có, hãy ghi lại những hỗ trợ đó trong bảng dưới đây', DOC_STYLES['Body Style']))
-
-    # Tạo bảng các thành tích khác
+    
+    # Tạo bảng các hỗ trợ khác
     story.append(Spacer(width=0, height=2 * LINE_SPACING))
     table_data = [[u'Tên học bổng/hỗ trợ', u'Thời gian nhận', u'Giá trị', u'Lí do được nhận']] + \
                  [[Paragraph(element, DOC_STYLES['Table Cell Style']) for element in
-                   get_field(candidate, 'HoTro' + str(index)).split(';')] for index in range(1, 6)]
+                   get_field(candidate, 'HoTro' + str(index)).split(';',3)] for index in range(1, 6)]
     table = Table(table_data, colWidths=[140, 100, 100, 140])
     table_style = STANDARD_TABLE
     table.setStyle(table_style)
     story.append(table)
     story.append(Spacer(width=0, height=2 * LINE_SPACING))
-
-    story.append(Spacer(width=0, height=2 * LINE_SPACING))
-    table_data = [[u'Các việc làm thêm', [Paragraph(element, DOC_STYLES['Table Cell Style']) for element in
+    
+    story.append(Paragraph(u'Nếu đã từng nhận học bổng Đồng Hành và các học bổng khác, bạn đã sử dụng những tiền học bổng đó vào việc gì?',
+                           DOC_STYLES['Heading I Style']))
+    
+    story.append(Paragraph(get_field(candidate, 'TienHocBongDaNhan'), DOC_STYLES['Body Style']))
+    
+    story.append(Spacer(width=0, height = LINE_SPACING))
+    
+    table_data = [['',Paragraph('--------------------------------------------------------', DOC_STYLES['Body Style'])],
+                  [u'Các việc làm thêm:', [Paragraph(element, DOC_STYLES['Table Cell Style']) for element in
                                           get_field(candidate, 'LamThem').split("\n")]],
-                  [u'Những hoạt động khác', [Paragraph(element, DOC_STYLES['Table Cell Style']) for element in
+                  ['',Paragraph('--------------------------------------------------------', DOC_STYLES['Body Style'])],
+                  [u'Những hoạt động khác:', [Paragraph(element, DOC_STYLES['Table Cell Style']) for element in
                                              get_field(candidate, 'HoatDongKhac').split("\n")]]]
     table = Table(table_data, colWidths=[150, 330])
     table_style = TRANSPARENT_TABLE
     table.setStyle(table_style)
     story.append(table)
-    story.append(Spacer(width=0, height=2 * LINE_SPACING))
-
+    story.append(Spacer(width=0, height=1.5 * LINE_SPACING))
+    
+    
     story.append(PageBreak())
+    
     return story
 
 
@@ -460,7 +496,7 @@ def step2_background(story, candidate, heading_csv):
 
     # Monthly costs
     story.append(Paragraph(u'1. Chi phí hằng tháng:', DOC_STYLES['Heading I Style']))
-    local_needed_fields = ['NhaO', 'DiLai', 'TienAn', 'TienHoc', 'TienHocThem', 'VuiChoi', 'CacKhoanKhac']
+    local_needed_fields = ['NhaO', 'DiLai', 'TienAn', 'VuiChoi', 'TienHoc', 'TienHocThem']
     table_data = [[(FIELD_NAMES_FULL[key] + ': '), money_processing(get_field(candidate, key))] for key in
                   local_needed_fields]
     table_style = VERTICAL_TRANSPARENT_NUMERIC_TABLE
@@ -507,13 +543,13 @@ def step2_background(story, candidate, heading_csv):
                   [u'Học thêm ngoại ngữ, tin học: ', YES_NO_ICON[get_field(candidate, 'HocThemKhong')], u'Thời gian: ',
                    Paragraph(get_field(candidate, 'HocThemBaoNhieu'), DOC_STYLES['Body Right Style'])],
                   [u'Khác (ghi rõ): ', '', '',
-                   Paragraph(get_field(candidate, 'HocThemBaoNhieu'), DOC_STYLES['Body Right Style'])]]
+                   Paragraph(get_field(candidate, 'DongTienKhac'), DOC_STYLES['Body Right Style'])]]
     table_style = VERTICAL_TRANSPARENT_NUMERIC_TABLE
     table = Table(table_data, colWidths=[180, 30, 70, 150])
     table.setStyle(table_style)
     story.append(table)
 
-    # Communication
+    '''# Communication
     story.append(Paragraph(u'6. Sau khi nhận học bổng, bạn muốn liên lạc với Đồng Hành qua hình thức nào?',
                            DOC_STYLES['Heading I Style']))
     table_data = [
@@ -527,17 +563,18 @@ def step2_background(story, candidate, heading_csv):
     table = Table(table_data, colWidths=[200, 40, 200, 40, 10])
     table.setStyle(table_style)
     story.append(table)
+    '''
 
     # Other questions
     story.append(
-        Paragraph(('7. %s' % FIELD_NAMES_FULL['MongMuonNhanGiTuDH']), DOC_STYLES['Heading I Style']))
+        Paragraph(('6. %s' % FIELD_NAMES_FULL['MongMuonNhanGiTuDH']), DOC_STYLES['Heading I Style']))
     story += [Paragraph(('<i>%s%s</i>' % (make_tabs(14), element)), DOC_STYLES['Body Style']) for
               element in get_field(candidate, 'MongMuonNhanGiTuDH').split('\n')]
     story.append(
-        Paragraph(('8. %s' % FIELD_NAMES_FULL['KhoKhanLamHoSo']), DOC_STYLES['Heading I Style']))
+        Paragraph(('7. %s' % FIELD_NAMES_FULL['KhoKhanLamHoSo']), DOC_STYLES['Heading I Style']))
     story += [Paragraph(('<i>%s%s</i>' % (make_tabs(14), element)), DOC_STYLES['Body Style']) for
               element in get_field(candidate, 'KhoKhanLamHoSo').split('\n')]
-    story.append(Paragraph(('9. %s' % FIELD_NAMES_FULL['DeDatNhanNhu']), DOC_STYLES['Heading I Style']))
+    story.append(Paragraph(('8. %s' % FIELD_NAMES_FULL['DeDatNhanNhu']), DOC_STYLES['Heading I Style']))
     story += [Paragraph(('<i>%s%s</i>' % (make_tabs(14), element)), DOC_STYLES['Body Style']) for
               element in get_field(candidate, 'DeDatNhanNhu').split('\n')]
 
